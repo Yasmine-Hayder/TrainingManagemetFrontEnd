@@ -1,0 +1,426 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" style="color:white;">Gestion de formations</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarColor02">
+       <ul class="navbar-nav mr-auto">
+             <a class="nav-link" (click)="onOpenModal(null!,null!, 'add')">Ajouter une Formation </a>
+             <a class="nav-link" (click)="onOpenModal(null!,null!, 'addDomaine')">Domaine </a>
+             <a class="nav-link" (click)="onOpenModal(null!,null!, 'addOrganisme')">Organisme </a>
+             <a class="nav-link" (click)="onOpenModal(null!,null!, 'addFormateur')">Formateur </a>
+
+             <a class="nav-link" routerLink="/logout">Logout<span class="sr-only"></span></a>
+       </ul>
+    </div>
+  </nav>
+  <div class="container" id="main-container">
+  <div class="row">
+    <div *ngFor="let formation of formations" class="col-md-6 col-xl-3">
+       <div class="card m-b-30">
+         <div class="card-body row">
+            <div class="col-6">
+               <a href=""><img src="{{formation?.budget}}" alt="" class="img-fluid rounded-circle w-60"></a>
+            </div>
+            <div class="col-6 card-title align-self-center mb-0">
+               
+               <h5>{{formation?.titre}}</h5>
+               <p class="m-0">{{formation?.duree}}</p>
+            </div>
+         </div>
+         <ul class="list-group list-group-flush">
+            <li class="list-group-item"><i class="fa fa-phone float-right"></i>Année : {{formation?.annee}}</li>
+         </ul>
+          <div class="card-body">
+             <div class="float-right btn-group btn-group-sm">
+               <a (click)="onOpenModal(formation,null!, 'addSession')"  data-placement="top" ><i class="fa fa-plus" style="font-size:30px;color:green"></i>
+               </a>
+                <a (click)="getSessions(formation)" class="btn btn-primary tooltips" data-placement="top" data-original-title="Edit">Liste Sessions</a>
+                <a (click)="onOpenModal(formation,null!, 'delete')" class="btn btn-secondary tooltips" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>
+                
+             </div>
+          </div>
+   </div>    
+  </div> 
+</div>
+<div class="modal fade bd-example-modal-lg" id="SessionFormationModal"  tabindex="-1" role="dialog" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-lg" role="document">
+     <div class="modal-content">
+        <div class="modal-header">
+           <h5 class="modal-title" id="addEmployeeModalLabel" >Liste sessions</h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+        <div class="modal-body">
+               <table class="table">
+                   <thead class="thead-dark">
+                   <tr>
+                       <th scope="col">Date Début</th>
+                       <th scope="col">Date Fin</th>
+
+                       <th scope="col">Lieu</th>
+                       <th scope="col">Formateur</th>
+                       <th scope="col">Organisme</th>
+                        <th scope="col">Participants</th>
+                   </tr>
+                   </thead>
+                   <tbody>
+                   <tr *ngFor="let session of sessions">
+                      <td>{{session?.date_debut}}</td>
+                      <td>{{session?.date_fin}}</td>
+
+                       <td>{{session?.lieu}}</td>
+                       <td>{{session?.formateur?.nom}} {{session?.formateur?.prenom}}</td>
+                       <td>{{session?.organisme?.libelle}}</td>
+                       <div class="float-right btn-group btn-group-sm">
+                        <a (click)="onOpenModal(null!,session, 'addParticipant')"  data-placement="top" ><i class="fa fa-plus" style="font-size:30px;color:green"></i>
+                        </a><br>
+                         <a (click)="getParticipants(session)" class="btn btn-primary tooltips" data-placement="top" data-original-title="Edit">Liste Participants</a>
+                      </div>
+                   </tr>
+                   </tbody>
+               </table>
+               <div class="modal-footer">
+               </div>
+           </div>
+         </div>
+     </div>                   
+  </div>
+</div>
+<!-- Add Formation Modal -->
+<div class="modal fade bd-example-modal-lg" id="addDomaineModal" tabindex="-1" role="dialog" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-lg" role="document">
+     <div class="modal-content">
+        <div class="modal-header">
+
+           <h5 class="modal-title" id="addEmployeeModalLabel" >Ajouter un domaine </h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+        
+        <div class="modal-body">
+           <form #addForm3="ngForm"  (ngSubmit)="onAddDomaine(addForm3)">
+
+           <div class="form-group">
+              <label for="password">Libelle</label>
+              <input type="text" ngModel name="libelle" class="form-control" id="imageUrl" placeholder="libelle" >
+           </div>
+           <div class="modal-footer">
+              <button type="button" id="add-employee-form3" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button [disabled]="addForm3.invalid" type="submit" class="btn btn-primary" >Save changes</button>
+           </div>
+           </form>
+        </div>
+     </div>
+
+     </div>
+  </div>
+<!-- Add Formation Modal -->
+<div class="modal fade bd-example-modal-lg" id="addOrganismeModal" tabindex="-1" role="dialog" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-lg" role="document">
+     <div class="modal-content">
+        <div class="modal-header">
+
+           <h5 class="modal-title" id="addEmployeeModalLabel" >Ajouter un organisme </h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+        
+        <div class="modal-body">
+           <form #addForm5="ngForm"  (ngSubmit)="onAddOrganisme(addForm5)">
+
+           <div class="form-group">
+              <label for="password">Libelle</label>
+              <input type="text" ngModel name="libelle" class="form-control" id="imageUrl" placeholder="libelle" >
+           </div>
+           <div class="modal-footer">
+              <button type="button" id="add-employee-form5" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button [disabled]="addForm5.invalid" type="submit" class="btn btn-primary" >Save changes</button>
+           </div>
+           </form>
+        </div>
+     </div>
+
+     </div>
+  </div>
+
+<!-- Add Formation Modal -->
+<div class="modal fade bd-example-modal-lg" id="addFormateurModal" tabindex="-1" role="dialog" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-lg" role="document">
+     <div class="modal-content">
+        <div class="modal-header">
+
+           <h5 class="modal-title" id="addEmployeeModalLabel" >Ajouter un Formateur</h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+        
+        <div class="modal-body">
+           <form #addForm4="ngForm"  (ngSubmit)="onAddFormateur(addForm4)">
+
+           <div class="form-group">
+              <label for="login">Nom</label>
+              <input type="text" class="ng-dirty ng-valid ng-touched" ngModel name="nom" class="form-control" id="titre" placeholder="Nom" required >
+           </div>
+           <div class="form-group">
+              <label for="password">Prénom</label>
+              <input type="text" ngModel name="prenom" class="form-control" id="imageUrl" placeholder="Prenom" required>
+           </div>
+           <div class="form-group">
+              <label for="phone">tel</label>
+              <input type="text" ngModel name="tel" class="form-control" id="annee" placeholder="tel" required>
+           </div>
+         
+           <div class="form-group">
+              <label for="role">email</label>
+              <input type="text" ngModel name="email" class="form-control" id="duree" placeholder="Email" required>
+           </div>
+           
+              <div >
+                 <label >Organisme:</label>
+
+           <select ngModel name="organismeId"    class="custom-select" >
+              <option [value]="organisme.id"  *ngFor="let organisme of organismes">{{organisme?.libelle}}</option>
+          </select>
+          </div>
+           <div class="modal-footer">
+              <button type="button" id="add-employee-form4" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button [disabled]="addForm4.invalid" type="submit" class="btn btn-primary" >Save changes</button>
+           </div>
+           </form>
+        </div>
+     </div>
+
+     </div>
+  </div>
+
+
+  <!-- Add Formation Modal -->
+  <div class="modal fade bd-example-modal-lg" id="addFormationModal" tabindex="-1" role="dialog" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+
+            <h5 class="modal-title" id="addEmployeeModalLabel" >Ajouter une Formation</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         
+         <div class="modal-body">
+            <form #addForm="ngForm"  (ngSubmit)="onAddFormation(addForm)">
+
+            <div class="form-group">
+               <label for="login">Titre</label>
+               <input type="text" class="ng-dirty ng-valid ng-touched" ngModel name="titre" class="form-control" id="titre" placeholder="titre" required >
+            </div>
+            <div class="form-group">
+               <label for="password">imageUrl</label>
+               <input type="text" ngModel name="budget" class="form-control" id="imageUrl" placeholder="imageUrl" >
+            </div>
+            <div class="form-group">
+               <label for="phone">Année</label>
+               <input type="text" ngModel name="annee" class="form-control" id="annee" placeholder="Année" required>
+            </div>
+          
+            <div class="form-group">
+               <label for="role">Durée:</label>
+               <input type="text" ngModel name="duree" class="form-control" id="duree" placeholder="duree" required>
+            </div>
+            
+               <div >
+                  <label >Domaine:</label>
+
+            <select ngModel name="domaineId"    class="custom-select" >
+               <option [value]="domaine.id"  *ngFor="let domaine of domaines">{{domaine?.libelle}}</option>
+           </select>
+           </div>
+            <div class="modal-footer">
+               <button type="button" id="add-employee-form" class="btn btn-secondary" data-dismiss="modal">Close</button>
+               <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary" >Save changes</button>
+            </div>
+            </form>
+         </div>
+      </div>
+
+      </div>
+   </div>
+
+    
+    <!-- Add Session Modal -->
+    <div class="modal fade bd-example-modal-lg" id="addSessionModal" tabindex="-1" role="dialog" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+           <div class="modal-header">
+   
+              <h5 class="modal-title" id="addEmployeeModalLabel" >Ajouter une Session</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+              </button>
+           </div>
+           <div class="modal-body">
+              <form #addForm1="ngForm"  (ngSubmit)="onAddSession(addForm1,current)">
+              <div class="form-group">
+                 <label for="login">Date Début:</label>
+                 <input type="date" class="ng-dirty ng-valid ng-touched" ngModel name="date_debut" class="form-control" id="titre" placeholder="Date Début" required >
+              </div>
+              <div class="form-group">
+                 <label for="password">Date fin:</label>
+                 <input type="date" ngModel name="date_fin" class="form-control" id="imageUrl" placeholder="imageUrl" required>
+              </div>
+              <div class="form-group">
+                 <label for="phone">Lieu:</label>
+                 <input type="text" ngModel name="lieu" class="form-control" id="lieu" placeholder="Lieu" required>
+              </div>
+              <div class="form-group">
+               <label for="phone">Nombre Participants</label>
+               <input type="text" ngModel name="nb_participant" class="form-control" id="annee" placeholder="Nombre Participants" required>
+            </div>
+              <div class="form-group">
+               <label for="phone">Formateur:</label>
+               <select name="formateurId" ngModel id="pet-select"class="custom-select" >
+                  <option [value]="formateur.id"  *ngFor="let formateur of formateurs">{{formateur?.id}} - {{formateur?.nom}} {{formateur?.prenom}}</option>
+               </select>
+              </div>
+              <div class="form-group">
+               <label for="phone">Organisme:</label>
+               <select name="organismeId" ngModel id="pet-select"class="custom-select" >
+                  <option [value]="organisme.id"  *ngFor="let organisme of organismes">{{organisme?.id}} - {{organisme?.libelle}}</option>
+              </select>
+           </div>
+              <div class="modal-footer">
+                 <button type="button" id="add-employee-form1" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                 <button [disabled]="addForm1.invalid" type="submit" class="btn btn-primary" >Save changes</button>
+              </div>
+              
+              </form>
+           </div>
+        </div>
+        </div>
+    </div>
+     <!-- Delete Formation Modal -->
+    <div class="modal fade bd-example-modal-lg" id="deleteFormationModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="deleteModelLabel">Delete Formation</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <p>Are you sure you want to delete Formation {{deleteFormation?.titre}}?</p>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                  <button (click)="onDeleteFormation(deleteFormation!.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>
+               </div>
+            </div>
+         </div>
+      </div>
+    </div>
+  
+      
+         
+
+  <!-- Notification for no employees -->
+  <div *ngIf="formations ?.length == 0" class="col-lg-20 col-md-20 col-xl-20">
+  <div class="alert alert-info" role="alert">
+    <h4 class="alert-heading">NO Users!</h4>
+    <p>No Users were found.</p>
+  </div>
+  </div>
+  <div class="modal fade bd-example-modal-lg" id="ParticipantSessionModal"  tabindex="-1" role="dialog" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-lg" role="document">
+     <div class="modal-content">
+        <div class="modal-header">
+           <h5 class="modal-title" id="addEmployeeModalLabel" >Liste Participant</h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+        <div class="modal-body">
+               <table class="table">
+                   <thead class="thead-dark">
+                   <tr>
+                       <th scope="col">Nom</th>
+                       <th scope="col">Prenom</th>
+                       <th scope="col">email</th>
+                       <th scope="col">tel</th>
+                        <th scope="col">Pays</th>
+                        <th scope="col">Profile</th>
+
+                   </tr>
+                   </thead>
+                   <tbody>
+                   <tr *ngFor="let participant of participants">
+                      <td>{{participant?.nom}}</td>
+                       <td>{{participant?.prenom}}</td>
+                       <td>{{participant?.email}} </td>
+                       <td>{{participant?.tel}}</td>
+                       <td>{{participant?.pays?.libelle}}</td>
+                       <td>{{participant?.profil?.libelle}}</td>
+
+                   </tr>
+                   </tbody>
+               </table>
+               <div class="modal-footer">
+               </div>
+           </div>
+         </div>
+     </div>                   
+  </div>
+  <!-- Add Participant Modal -->
+  <div class="modal fade bd-example-modal-lg" id="addParticipantModal" tabindex="-1" role="dialog" aria-hidden="true">
+   <div class="modal-dialog modal-lg" role="document">
+     <div class="modal-content">
+        <div class="modal-header">
+
+           <h5 class="modal-title" id="addEmployeeModalLabel" >Ajouter un Participant</h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+        <div class="modal-body">
+           <form #addForm2="ngForm"  (ngSubmit)="onAddParticipant(addForm2,currentSession)">
+           <div class="form-group">
+              <label for="login">Nom:</label>
+              <input type="text" class="ng-dirty ng-valid ng-touched" ngModel name="nom" class="form-control" id="titre" placeholder="nom" required >
+           </div>
+           <div class="form-group">
+              <label for="password">Prenom:</label>
+              <input type="text" ngModel name="prenom" class="form-control" id="imageUrl" placeholder="prenom" required>
+           </div>
+           <div class="form-group">
+              <label for="phone">Tel:</label>
+              <input type="text" ngModel name="tel" class="form-control" id="lieu" placeholder="tel" required>
+           </div>
+           <div class="form-group">
+            <label for="phone">Email</label>
+            <input type="text" ngModel name="email" class="form-control" id="annee" placeholder="email" required>
+         </div>
+           <div class="form-group">
+            <label for="phone">Pays:</label>
+            <select name="paysId" ngModel id="pet-select"class="custom-select" >
+               <option [value]="pays.id"  *ngFor="let pays of pays"> {{pays?.libelle}} </option>
+            </select>
+           </div>
+           <div class="form-group">
+            <label for="phone">Profile:</label>
+            <select name="profilId" ngModel id="pet-select"class="custom-select" >
+               <option [value]="profil.id"  *ngFor="let profil of profiles">{{profil?.libelle}}</option>
+           </select>
+        </div>
+           <div class="modal-footer">
+              <button type="button" id="add-employee-form2" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button [disabled]="addForm2.invalid" type="submit" class="btn btn-primary" >Save changes</button>
+           </div>
+           
+           </form>
+        </div>
+     </div>
+     </div>
+ </div>

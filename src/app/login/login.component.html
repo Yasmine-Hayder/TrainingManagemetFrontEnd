@@ -1,0 +1,33 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<div class="sidenav">
+         <div class="login-main-text">
+            <h2><b>Bienvenue </b><br> </h2>
+            <p>Si vous êtes un administrateur ou un utilisateur , identifiez-vous pour accéder a votre page.</p>
+         </div>
+      </div>
+      <div class="main">
+         <div class="col-md-6 col-sm-12">
+            <div class="login-form">
+               <form #f="ngForm">
+                  <div class="form-group">
+                     <label>Username</label>
+                     <input class="ng-dirty ng-valid ng-touched" type="text" class="form-control" placeholder="login" [(ngModel)]="user.login" name="login" required>
+                     <small class="help-block" *ngIf="f.controls['login'].touched && f.controls['login'].invalid">Login is required</small>
+                  </div>
+                  <div class="form-group">
+                     <label>Password</label>
+                     <input type="password" class="form-control" placeholder="Password" [(ngModel)]="user.password" name="password" required>
+                     <small class="help-block" *ngIf="f.controls['login'].touched && f.controls['login'].invalid">Login is required</small>
+
+                  </div>
+                  <p *ngIf="errorMessage && errorMessage.length>0" style="color:darkred;"> {{errorMessage}}</p>
+
+                  <button (click)=checkLogin()  class="btn btn-black">Login</button>
+               </form>
+            </div>
+         </div>
+      </div>
