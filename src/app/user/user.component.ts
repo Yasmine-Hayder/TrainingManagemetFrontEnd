@@ -30,6 +30,8 @@ export class UserComponent implements OnInit {
   public currentSession : Session;
 
   public s : Session;
+  public s1: Session;
+  public notParticipants : Participant[];
 
   public sessions : Session[];
   public pays : Pays[];
@@ -72,6 +74,23 @@ export class UserComponent implements OnInit {
           this.s=session;
           console.log(response);
           this.participants= response;
+        }
+      )
+    }
+    public getNotParticipants(session : Session): void{
+      const container=document.getElementById('main-container');
+      const button= document.createElement('button');
+      button.type='button';
+      button.style.display='none';
+      button.setAttribute('data-toggle','modal');
+      button.setAttribute('data-target','#notParticipantSessionModal');
+      container?.appendChild(button);
+      button.click();
+      this.participantService.getNotParticipants(session.id).subscribe(
+        (response:Participant[]) => {
+          this.s1=session;
+          console.log(response);
+          this.notParticipants= response;
         }
       )
     }
@@ -272,6 +291,26 @@ export class UserComponent implements OnInit {
         }
       );
     }
+    public onAddParticipantToSession(addForm2: NgForm,s:Session,p:Participant): void {
+      document.getElementById('add-employee-form7')!.click();
+
+      var sess : Session[]=new Array();
+      sess[0]=s
+      
+      p.sessions=sess
+      this.participantService.updateParticipant(p).subscribe(
+        (response: Participant) => {
+          console.log(response);
+          this.getParticipants(s);
+          addForm2.reset();
+
+        },
+        (error: HttpErrorResponse) => {
+          alert("Erreur de saisi"); 
+          addForm2.reset();
+        }
+      );
+    }
     public onDeleteFormation(userId: number): void {
       this.formationService.deleteFormation(userId).subscribe(
         (response: void) => {
@@ -314,6 +353,10 @@ export class UserComponent implements OnInit {
         button.setAttribute('data-target','#addSessionModal');
       }
       if (mode== 'addParticipant') {
+        this.currentSession=session;
+        button.setAttribute('data-target','#addParticipantModal');
+      }
+      if (mode== 'addParticipantToSession') {
         this.currentSession=session;
         button.setAttribute('data-target','#addParticipantModal');
       }

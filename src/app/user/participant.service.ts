@@ -13,6 +13,9 @@
     public getParticipants(id:number): Observable<Participant[]> {
       return this.http.get<Participant[]>(`${this.apiServerUrl}/participant/all/${id}`);
     }
+    public getNotParticipants(id:number): Observable<Participant[]> {
+      return this.http.get<Participant[]>(`${this.apiServerUrl}/participant/find/${id}`);
+    }
 
     public addParticipant(user: Participant): Observable<Participant> {
       return this.http.post<Participant>(`${this.apiServerUrl}/participant/add`, user);

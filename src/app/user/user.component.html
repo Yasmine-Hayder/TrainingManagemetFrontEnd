@@ -74,7 +74,7 @@
                        <td>{{session?.formateur?.nom}} {{session?.formateur?.prenom}}</td>
                        <td>{{session?.organisme?.libelle}}</td>
                        <div class="float-right btn-group btn-group-sm">
-                        <a (click)="onOpenModal(null!,session, 'addParticipant')"  data-placement="top" ><i class="fa fa-plus" style="font-size:30px;color:green"></i>
+                        <a (click)="getNotParticipants(session)"  data-placement="top" ><i class="fa fa-plus" style="font-size:30px;color:green"></i>
                         </a><br>
                          <a (click)="getParticipants(session)" class="btn btn-primary tooltips" data-placement="top" data-original-title="Edit">Liste Participants</a>
                       </div>
@@ -368,6 +368,51 @@
                    </tbody>
                </table>
                <div class="modal-footer">
+
+               </div>
+           </div>
+         </div>
+     </div>                   
+  </div>
+  <div class="modal fade bd-example-modal-lg" id="notParticipantSessionModal"  tabindex="-1" role="dialog" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-lg" role="document">
+     <div class="modal-content">
+        <div class="modal-header">
+           <h5 class="modal-title" id="addEmployeeModalLabel" >Liste de tous les Participant</h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+        <div class="modal-body">
+               <table class="table">
+                   <thead class="thead-dark">
+                   <tr>
+                       <th scope="col">Nom</th>
+                       <th scope="col">Prenom</th>
+                       <th scope="col">email</th>
+                       <th scope="col">tel</th>
+                        <th scope="col">Pays</th>
+                        <th scope="col">Profile</th>
+                        <th></th>
+                   </tr>
+                   </thead>
+                   <tbody>
+                   <tr *ngFor="let participant of notParticipants">
+                      <td>{{participant?.nom}}</td>
+                       <td>{{participant?.prenom}}</td>
+                       <td>{{participant?.email}} </td>
+                       <td>{{participant?.tel}}</td>
+                       <td>{{participant?.pays?.libelle}}</td>
+                       <td>{{participant?.profil?.libelle}}</td>
+                       <td><a (click)="onAddParticipantToSession(null!,s1,participant)"  data-placement="top" ><i class="fa fa-plus" style="font-size:30px;color:green"></i>
+                       </a></td>
+                   </tr>
+                   </tbody>
+               </table>
+               <div class="modal-footer">
+                     <a (click)="onOpenModal(null!,s1, 'addParticipant')" class="btn btn-success" data-placement="top" data-original-title="Edit">Nouveau Participant</a>
+                     <button type="button" id="add-employee-form7" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
                </div>
            </div>
          </div>
